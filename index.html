@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vibeAIzone - Новости Искусственного Интеллекта</title>
+
+    <!-- Подключаем шрифты напрямую -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #5865f2; /* Более современный фиолетово-синий */
+            --dark-bg: #101116;
+            --card-bg: rgba(22, 24, 33, 0.6); /* Полупрозрачный для эффекта стекла */
+            --text-color: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --main-font: 'Manrope', sans-serif;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--main-font);
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Полностью переработанный звездный фон */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+        }
+
+        /* Общие стили для звездных слоев */
+        .stars, .stars2, .stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: transparent;
+        }
+
+        /* Первый слой: мелкие, медленные звезды */
+        .stars {
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee 1px, transparent 0),
+                              radial-gradient(2px 2px at 40px 70px, #eee 1px, transparent 0),
+                              radial-gradient(2px 2px at 100px 150px, #eee 1px, transparent 0),
+                              radial-gradient(2px 2px at 150px 200px, #eee 1px, transparent 0),
+                              radial-gradient(2px 2px at 200px 50px, #eee 1px, transparent 0);
+            background-size: 250px 250px;
+            animation: stars-anim 100s linear infinite;
+        }
+
+        /* Второй слой: средние звезды, быстрее */
+        .stars2 {
+            background-image: radial-gradient(3px 3px at 50px 100px, #fff 1px, transparent 0),
+                              radial-gradient(3px 3px at 120px 250px, #fff 1px, transparent 0),
+                              radial-gradient(3px 3px at 200px 300px, #fff 1px, transparent 0);
+            background-size: 400px 400px;
+            animation: stars-anim2 150s linear infinite;
+            opacity: 0.8;
+        }
+
+        /* Третий слой: крупные звезды, самые быстрые */
+        .stars3 {
+            background-image: radial-gradient(4px 4px at 100px 200px, #fff 1px, transparent 0),
+                              radial-gradient(4px 4px at 250px 500px, #fff 1px, transparent 0);
+            background-size: 600px 600px;
+            animation: stars-anim3 200s linear infinite;
+            opacity: 0.6;
+        }
+
+        /* Анимация для звезд */
+        @keyframes stars-anim {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-1000px); }
+        }
+
+        @keyframes stars-anim2 {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-1500px); }
+        }
+
+        @keyframes stars-anim3 {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Шапка сайта с эффектом стекла */
+        header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 0;
+            z-index: 10;
+            background: rgba(16, 17, 22, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 0 0 18px 18px; /* Скругление только нижних углов шапки */
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-button {
+            text-decoration: none;
+            color: #fff;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.7rem 1.4rem;
+            border-radius: 12px; /* Увеличил скругление */
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-button:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        main {
+            text-align: center;
+        }
+
+        /* Главный экран с идеальным центрированием */
+        .hero {
+            padding: 6rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 85vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.8rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #fff;
+            text-shadow: 0 4px 25px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.35rem;
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+            color: var(--text-secondary);
+            text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+        }
+
+        .cta-button {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: var(--primary-color);
+            padding: 1.1rem 2.8rem;
+            border-radius: 16px; /* Увеличил скругление */
+            font-size: 1.15rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 6px 25px rgba(88, 101, 242, 0.5);
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.6);
+        }
+
+        .features {
+            padding: 5rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        /* Карточки с эффектом стекла */
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 2.2rem;
+            border-radius: 20px; /* Увеличил скругление */
+            border: var(--glass-border);
+            backdrop-filter: blur(18px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 30px rgba(88, 101, 242, 0.4);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.45rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Стили для новой секции с Gemini */
+        .ai-explainer {
+            background-color: var(--card-bg);
+            padding: 3.5rem 2.5rem;
+            border-radius: 20px; /* Увеличил скругление */
+            border: var(--glass-border);
+            backdrop-filter: blur(18px);
+            margin: 5rem 0;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .ai-explainer h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            font-weight: 800;
+        }
+
+        .ai-explainer p {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.1rem;
+        }
+
+        .explainer-input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        #ai-term-input {
+            font-family: var(--main-font);
+            padding: 1rem 1.4rem;
+            border-radius: 16px; /* Увеличил скругление */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            min-width: 320px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        #ai-term-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
+        }
+
+        #explain-button {
+            padding: 1.1rem 1.8rem;
+            font-size: 1.1rem;
+        }
+
+        #explainer-result-container {
+            margin-top: 2.5rem;
+            min-height: 80px;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 16px; /* Увеличил скругление */
+            text-align: left;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        #explainer-result {
+            color: var(--text-color);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 1.05rem;
+        }
+
+        /* Анимация загрузчика */
+        #loader {
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 5px solid var(--primary-color);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .call-to-action {
+            padding: 6rem 1rem;
+            margin: 5rem 0;
+        }
+
+        .call-to-action h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .call-to-action p {
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px 18px 0 0; /* Скругление только верхних углов подвала */
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .wrapper, nav {
+                padding: 0 1rem;
+            }
+            .hero {
+                min-height: 75vh;
+                padding: 3rem 0;
+            }
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+            .hero-content p {
+                font-size: 1.15rem;
+            }
+            .nav-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .cta-button {
+                padding: 0.9rem 2rem;
+                font-size: 1rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .feature-card {
+                padding: 1.8rem;
+            }
+            .ai-explainer, .call-to-action {
+                padding: 2.5rem 1.5rem;
+            }
+            .ai-explainer h2, .call-to-action h2 {
+                font-size: 2rem;
+            }
+            #ai-term-input {
+                min-width: unset;
+                width: 100%;
+            }
+            .explainer-input-group {
+                flex-direction: column;
+            }
+            #explain-button {
+                width: 100%;
+            }
+            #explainer-result-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Анимированный фон (переработанная версия) -->
+    <div class="background">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- Основной контейнер сайта -->
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="logo">vibeAI<span>zone</span></div>
+                <a href="https://t.me/vibeaizone" class="nav-button" target="_blank">Присоединиться</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Все об Искусственном Интеллекте. Просто и понятно.</h1>
+                    <p>Главные новости о ChatGPT и нейросетях в нашем Telegram-канале. Подписывайтесь, чтобы быть в курсе технологий будущего.</p>
+                    <a href="https://t.me/vibeaizone" class="cta-button" target="_blank">Перейти в канал</a>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="icon">⚡️</span>
+                        <h3>Свежие новости</h3>
+                        <p>Публикуем только самые важные обновления из мира ИИ без лишней воды.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="icon">💡</span>
+                        <h3>Полезные гайды</h3>
+                        <p>Рассказываем, как применять нейросети для работы, учебы и творчества.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="icon">🌍</span>
+                        <h3>Главные тренды</h3>
+                        <p>Держим вас в курсе ключевых событий, которые формируют будущее технологий.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- СЕКЦИЯ С GEMINI API -->
+            <section class="ai-explainer">
+                <h2>AI-Термины простыми словами</h2>
+                <p>Не знаете, что такое "трансформер" или "GAN"? Просто введите термин, и наш AI-помощник объяснит его понятным языком.</p>
+                <div class="explainer-input-group">
+                    <input type="text" id="ai-term-input" placeholder="Например, Нейросеть">
+                    <button id="explain-button" class="cta-button">✨ Объяснить</button>
+                </div>
+                <div id="explainer-result-container">
+                    <div id="loader" class="hidden"></div>
+                    <p id="explainer-result"></p>
+                </div>
+            </section>
+
+            <section class="call-to-action">
+                <h2>Присоединяйтесь к vibeAIzone</h2>
+                <p>Станьте частью сообщества, которое следит за будущим уже сегодня.</p>
+                <a href="https://t.me/vibeaizone" class="cta-button" target="_blank">Подписаться в Telegram</a>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 vibeAIzone. Создано <a href="https://t.me/MoonFallenn" style="color: var(--primary-color); text-decoration: none; font-weight: 600;" target="_blank">MoonFallenn</a>.</p>
+        </footer>
+    </div>
+
+    <!-- СКРИПТ ДЛЯ РАБОТЫ С GEMINI API -->
+    <script>
+        const explainButton = document.getElementById('explain-button');
+        const termInput = document.getElementById('ai-term-input');
+        const resultContainer = document.getElementById('explainer-result-container');
+        const resultText = document.getElementById('explainer-result');
+        const loader = document.getElementById('loader');
+
+        explainButton.addEventListener('click', async () => {
+            const term = termInput.value.trim();
+            if (!term) {
+                resultContainer.style.display = 'block';
+                loader.classList.add('hidden');
+                resultText.textContent = 'Пожалуйста, введите термин для объяснения.';
+                return;
+            }
+
+            // Показываем загрузчик и контейнер, прячем старый текст
+            resultContainer.style.display = 'block';
+            resultText.textContent = '';
+            loader.classList.remove('hidden');
+
+            const prompt = `Объясни термин из области ИИ "${term}" простыми словами, как для новичка, на русском языке. Ответ должен быть кратким, ясным и неформальным. Избегай сложных технических деталей.`;
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Оставьте как есть, ключ будет предоставлен автоматически
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                // Реализация экспоненциальной задержки для повторных запросов
+                let response;
+                let retries = 3;
+                let delay = 1000;
+                for (let i = 0; i < retries; i++) {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        break;
+                    }
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                let explanation = "Извините, не удалось получить объяснение. Попробуйте еще раз.";
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    explanation = result.candidates[0].content.parts[0].text;
+                }
+
+                resultText.textContent = explanation;
+
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                resultText.textContent = 'Произошла ошибка при обращении к AI. Пожалуйста, попробуйте позже.';
+            } finally {
+                // Прячем загрузчик
+                loader.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
