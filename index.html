@@ -29,13 +29,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    
     <!-- Three.js Library for 3D Background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
         :root {
-            /* Dark theme variables by default */
+            /* Default dark theme variables */
             --primary-color: #5865f2;
             --dark-bg: #101116;
             --card-bg: rgba(22, 24, 33, 0.6);
@@ -47,20 +47,44 @@
         }
 
         .light-theme {
-            /* Improved Light theme variables */
-            --dark-bg: #F0F2F5; /* Soft, off-white background */
-            --card-bg: #FFFFFF; /* Pure white for cards */
-            --header-bg: rgba(255, 255, 255, 0.9); /* Opaque header */
-            --text-color: #1A202C; /* Darker, high-contrast text */
-            --text-secondary: #4A5568; /* More defined secondary text */
-            --glass-border: 1px solid rgba(0, 0, 0, 0.08); /* Lighter border */
-            --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            /* Enhanced light theme variables for better contrast and aesthetics */
+            --dark-bg: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #1A202C;
+            --text-secondary: #4A5568;
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Subtle radial gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.2;
+            background: radial-gradient(circle at 10% 20%, var(--primary-color), transparent),
+                        radial-gradient(circle at 90% 80%, #ff5722, transparent);
+            transition: background-color 0.5s ease;
+        }
+
+        body.light-theme::before {
+            background: radial-gradient(circle at 10% 20%, #43a047, transparent),
+                        radial-gradient(circle at 90% 80%, #ffc107, transparent);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -132,6 +156,12 @@
             color: var(--primary-color);
         }
 
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .nav-button {
             text-decoration: none;
             color: var(--text-color);
@@ -162,7 +192,6 @@
             cursor: pointer;
             transition: all 0.5s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            margin-left: 1rem;
         }
 
         .theme-switcher-toggle {
@@ -196,7 +225,7 @@
         }
 
         .hero-content h1 {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 1.8rem;
@@ -209,7 +238,7 @@
         }
 
         .hero-content p {
-            font-size: 1.35rem;
+            font-size: clamp(1rem, 2vw, 1.35rem);
             max-width: 700px;
             margin: 0 auto 3rem auto;
             color: var(--text-secondary);
@@ -243,7 +272,7 @@
             transform: none;
         }
 
-        .features, .services-section {
+        .features {
             padding: 5rem 0;
         }
 
@@ -261,7 +290,7 @@
             border: var(--glass-border);
             backdrop-filter: blur(18px);
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: var(--glass-shadow);
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -309,12 +338,12 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
+        
         .chat-modal-overlay.active {
             display: flex;
             opacity: 1;
         }
-
+        
         .chat-modal-content {
             background-color: var(--card-bg);
             border-radius: 20px;
@@ -370,7 +399,7 @@
             gap: 1rem;
             -webkit-overflow-scrolling: touch;
         }
-
+        
         /* Message styles */
         .message-container {
             display: flex;
@@ -397,6 +426,10 @@
             color: var(--text-color);
             border-bottom-left-radius: 4px;
             white-space: pre-wrap;
+        }
+        
+        body.light-theme .ai-message {
+            background-color: #F8F9FA;
         }
 
         .chat-input-area {
@@ -441,24 +474,34 @@
         #chat-send-btn:hover {
             transform: scale(1.1);
         }
-
-        #chat-loading {
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-left-color: var(--primary-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
+        
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            height: 1rem;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: dot-pulse 1s infinite;
+        }
+
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dot-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
         }
 
         .hidden {
             display: none;
         }
-
+        
         .ai-explainer {
             background-color: var(--card-bg);
             padding: 3.5rem 2.5rem;
@@ -471,7 +514,7 @@
         }
 
         .ai-explainer h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
             margin-bottom: 1.2rem;
             font-weight: 800;
             color: var(--text-color);
@@ -609,7 +652,7 @@
         }
 
         #daily-quote {
-            font-size: 1.6rem;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
             font-style: italic;
             font-weight: 600;
             line-height: 1.4;
@@ -649,6 +692,11 @@
             max-width: 300px;
             transition: background-color 0.5s ease;
         }
+        
+        /* Glow effect on hover for cards */
+        .data-feed-card:hover, .feature-card:hover, .creator-card:hover {
+            box-shadow: 0 0 20px var(--primary-color);
+        }
 
         .data-feed-card h3 {
             font-size: 1.2rem;
@@ -669,7 +717,7 @@
         }
 
         .about-section h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
             margin-bottom: 1.5rem;
             font-weight: 800;
             color: var(--text-color);
@@ -721,7 +769,7 @@
         }
 
         .call-to-action h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
             margin-bottom: 1.5rem;
             font-weight: 800;
             color: var(--text-color);
@@ -739,7 +787,7 @@
         }
 
         .contact-form-section {
-            padding: 5rem 0;
+            padding: 3.5rem;
             background-color: var(--card-bg);
             border-radius: 20px;
             border: var(--glass-border);
@@ -748,12 +796,11 @@
             margin: 5rem auto;
             max-width: 800px;
             text-align: left;
-            padding: 3.5rem;
             transition: background-color 0.5s ease;
         }
 
         .contact-form-section h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
             margin-bottom: 1.5rem;
             text-align: center;
         }
@@ -834,6 +881,30 @@
             color: #fff;
         }
 
+        /* Back to top button */
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.5);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        #backToTopBtn:hover {
+            background-color: #4352d3;
+            transform: translateY(-3px);
+        }
+
         footer {
             text-align: center;
             padding: 2.5rem 0;
@@ -868,7 +939,7 @@
     <div id="chatModal" class="chat-modal-overlay">
         <div class="chat-modal-content">
             <div class="chat-header">
-                <h3>AI Assistant Chat</h3>
+                <h3>AI Ассистент</h3>
                 <button class="chat-close-btn" id="chatCloseBtn">&times;</button>
             </div>
             <div class="chat-messages" id="chatMessages">
@@ -883,10 +954,13 @@
         </div>
     </div>
 
+    <!-- Back to top button -->
+    <button onclick="scrollToTop()" id="backToTopBtn" title="Наверх"><i class="fas fa-arrow-up"></i></button>
+
     <header class="fade-in">
         <nav>
             <a href="#" class="logo">vibe<span>AI</span>zone</a>
-            <div>
+            <div class="nav-actions">
                 <a href="#contactForm" class="nav-button">Связаться</a>
                 <div class="theme-switcher">
                     <div class="theme-switcher-toggle"></div>
@@ -937,11 +1011,9 @@
         <section class="quote-section fade-in">
             <h2 class="fade-in">Цитата дня</h2>
             <p id="daily-quote" class="fade-in delay-1">
-                "Загрузка цитаты..."
+                <span class="loading-dots"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></span>
             </p>
-            <span id="quote-author" class="fade-in delay-2">
-                - vibeAIzone
-            </span>
+            <span id="quote-author" class="fade-in delay-2"></span>
         </section>
 
         <!-- Live Data Feed Section -->
@@ -984,10 +1056,9 @@
 
     <footer>
         <div class="wrapper">
+            <!-- Social icons - only Telegram -->
             <div class="social-icons">
                 <a href="#" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                <a href="#" aria-label="VK"><i class="fab fa-vk"></i></a>
-                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
             <p>&copy; 2024 vibeAIzone. Все права защищены.</p>
         </div>
@@ -998,7 +1069,20 @@
             // Theme switcher logic
             const themeSwitcher = document.querySelector('.theme-switcher');
             themeSwitcher.addEventListener('click', () => {
-                document.body.classList.toggle('light-theme');
+                const body = document.body;
+                body.classList.toggle('light-theme');
+                
+                // Update 3D background color based on theme
+                const newBgColor = body.classList.contains('light-theme') ? 0xF0F2F5 : 0x101116;
+                const newFogColor = body.classList.contains('light-theme') ? 0xF0F2F5 : 0x101116;
+                const newParticleColor = body.classList.contains('light-theme') ? 0x5865f2 : 0x5865f2; // Primary color
+                
+                if (window.threeInitialized) {
+                    scene.background.set(new THREE.Color(newBgColor));
+                    scene.fog.color.set(new THREE.Color(newFogColor));
+                    lines.material.color.set(new THREE.Color(newParticleColor));
+                    particles.material.color.set(new THREE.Color(newParticleColor));
+                }
             });
 
             // Smooth scroll for nav
@@ -1032,6 +1116,20 @@
             }, observerOptions);
 
             fadeInElements.forEach(el => observer.observe(el));
+            
+            // Back to top button logic
+            const backToTopBtn = document.getElementById("backToTopBtn");
+            window.onscroll = function() {
+                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                    backToTopBtn.style.display = "block";
+                } else {
+                    backToTopBtn.style.display = "none";
+                }
+            };
+            window.scrollToTop = function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
 
             // AI Chat Modal Logic
             const chatModal = document.getElementById('chatModal');
@@ -1040,9 +1138,9 @@
             const chatMessages = document.getElementById('chatMessages');
             const chatInput = document.getElementById('chat-input');
             const chatSendBtn = document.getElementById('chat-send-btn');
-
+            
             let chatHistory = [];
-            const loadingHtml = '<div id="chat-loading"></div>';
+            const loadingHtml = '<span class="loading-dots"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></span>';
 
             openChatBtn.addEventListener('click', () => {
                 chatModal.classList.add('active');
@@ -1058,7 +1156,7 @@
                     chatModal.classList.remove('active');
                 }
             });
-
+            
             async function sendMessage() {
                 const userMessage = chatInput.value.trim();
                 if (userMessage === '') return;
@@ -1080,9 +1178,11 @@
                 loadingDiv.innerHTML = `<div class="message ai-message">${loadingHtml}</div>`;
                 chatMessages.appendChild(loadingDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                const prompt = chatHistory.map(m => m.parts[0].text).join('\n'); // Combine history for the prompt
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
 
                 try {
-                    const payload = { contents: chatHistory };
                     const apiKey = "";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
@@ -1101,17 +1201,17 @@
                         await new Promise(res => setTimeout(res, delay));
                         delay *= 2;
                     }
-
+                    
                     if (!response.ok) {
                          throw new Error(`API request failed with status ${response.status}`);
                     }
 
                     const result = await response.json();
-
+                    
                     if (result.candidates && result.candidates.length > 0 &&
                         result.candidates[0].content && result.candidates[0].content.parts &&
                         result.candidates[0].content.parts.length > 0) {
-
+                        
                         const aiMessageText = result.candidates[0].content.parts[0].text;
                         chatHistory.push({ role: "model", parts: [{ text: aiMessageText }] });
 
@@ -1142,8 +1242,8 @@
             const messageBox = document.getElementById('message-box');
 
             // --- Telegram Bot API Configuration ---
-            const BOT_TOKEN = '8432698521:AAFULILEoHbMimhrvXLkssDltraPUVY0MQY'; // Ваш токен бота
-            const CHAT_ID = 'YOUR_CHAT_ID'; // Замените на ID вашего чата или канала
+            const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // Your bot token
+            const CHAT_ID = 'YOUR_CHAT_ID'; // Replace with your chat or channel ID
             const TELEGRAM_API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
             // --- End of Configuration ---
 
@@ -1158,7 +1258,7 @@
                 const email = document.getElementById('email').value;
                 const message = document.getElementById('message').value;
 
-                // Создаем текст сообщения
+                // Create the message text
                 const telegramMessage = `
                 Новое сообщение с сайта vibeAIzone!
                 Имя: ${name}
@@ -1168,10 +1268,10 @@
                 `;
 
                 try {
-                    if (CHAT_ID === 'YOUR_CHAT_ID') {
-                        throw new Error('Please set your CHAT_ID in the script.');
+                    if (CHAT_ID === 'YOUR_CHAT_ID' || BOT_TOKEN === 'YOUR_BOT_TOKEN') {
+                        throw new Error('Please set your BOT_TOKEN and CHAT_ID in the script.');
                     }
-
+                    
                     const payload = {
                         chat_id: CHAT_ID,
                         text: telegramMessage,
@@ -1212,25 +1312,30 @@
                 messageBox.classList.add(type);
                 messageBox.style.display = 'block';
             }
-
+            
             // Three.js 3D Background Logic for Network Effect
             let scene, camera, renderer, particles, lines;
-            // Уменьшаем количество точек, чтобы сделать сетку менее плотной.
             const particleCount = 1000;
             const connectionDistance = 150;
             let mouseX = 0, mouseY = 0;
+            window.threeInitialized = false;
 
             function init3D() {
+                if (window.threeInitialized) return; // Prevent re-initialization
                 const container = document.getElementById('bg-canvas');
-
+                
                 // Scene, Camera, and Renderer setup
                 scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x101116);
-                scene.fog = new THREE.FogExp2(0x101116, 0.001);
+                const initialBgColor = document.body.classList.contains('light-theme') ? 0xF0F2F5 : 0x101116;
+                const initialFogColor = document.body.classList.contains('light-theme') ? 0xF0F2F5 : 0x101116;
+                const initialParticleColor = 0x5865f2;
+
+                scene.background = new THREE.Color(initialBgColor);
+                scene.fog = new THREE.FogExp2(initialFogColor, 0.001);
 
                 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
                 camera.position.z = 1000;
-
+                
                 renderer = new THREE.WebGLRenderer({ canvas: container, antialias: true, alpha: true });
                 renderer.setPixelRatio(window.devicePixelRatio);
                 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1245,9 +1350,9 @@
                     particlePositions[i * 3 + 2] = (Math.random() * 2000) - 1000;
                 }
                 particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-
+                
                 const particleMaterial = new THREE.PointsMaterial({
-                    color: 0x5865f2,
+                    color: initialParticleColor,
                     size: 2,
                     blending: THREE.AdditiveBlending,
                     transparent: true,
@@ -1261,13 +1366,15 @@
                 const linePositions = new Float32Array(particleCount * particleCount * 3 * 2); // Max possible lines
                 lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
                 const lineMaterial = new THREE.LineBasicMaterial({
-                    color: 0x5865f2,
+                    color: initialParticleColor,
                     transparent: true,
                     blending: THREE.AdditiveBlending,
                     opacity: 0.1
                 });
                 lines = new THREE.LineSegments(lineGeometry, lineMaterial);
                 scene.add(lines);
+
+                window.threeInitialized = true;
 
                 // Event listeners for window resize and mouse movement
                 window.addEventListener('resize', onWindowResize, false);
@@ -1276,6 +1383,7 @@
 
             function onWindowResize() {
                 // Update camera and renderer on window resize to ensure full screen
+                if (!window.threeInitialized) return;
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1290,7 +1398,7 @@
             function animate() {
                 requestAnimationFrame(animate);
 
-                // Увеличиваем чувствительность движения камеры к курсору
+                // Increase camera movement sensitivity to the cursor
                 camera.position.x += (mouseX * 300 - camera.position.x) * 0.05;
                 camera.position.y += (mouseY * 300 - camera.position.y) * 0.05;
                 camera.lookAt(scene.position);
@@ -1322,11 +1430,11 @@
                         }
                     }
                 }
-
+                
                 // Set the correct draw range and update the geometry
                 lines.geometry.setDrawRange(0, lineIndex);
                 lines.geometry.attributes.position.needsUpdate = true;
-
+                
                 renderer.render(scene, camera);
             }
 
@@ -1334,7 +1442,11 @@
             async function getDailyQuote() {
                 const quoteEl = document.getElementById('daily-quote');
                 const authorEl = document.getElementById('quote-author');
-
+                
+                // Show loading state
+                quoteEl.innerHTML = loadingHtml;
+                authorEl.textContent = "";
+                
                 try {
                     const prompt = "Дай одну короткую и вдохновляющую цитату об искусственном интеллекте. Ответ должен быть в формате 'Цитата' - 'Автор'.";
                     const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
@@ -1357,13 +1469,13 @@
                         await new Promise(res => setTimeout(res, delay));
                         delay *= 2;
                     }
-
+                    
                     if (!response.ok) {
                          throw new Error(`API request failed with status ${response.status}`);
                     }
 
                     const result = await response.json();
-
+                    
                     if (result.candidates && result.candidates.length > 0) {
                         const text = result.candidates[0].content.parts[0].text;
                         const parts = text.split(' - ');
